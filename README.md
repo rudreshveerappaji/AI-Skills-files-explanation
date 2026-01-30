@@ -75,7 +75,33 @@ Required in prod
 Recommended
 Mandatory
 
-## Where skills files fits in AI agent 
+
+Example: Same Skill, Two Representations
+
+skills.md (Human-friendly)
+
+Md
+"This skill generates executive briefings using trusted sources only.
+It must never fabricate numerical claims and must clearly state uncertainty."
+
+
+skills.json (Machine-enforced)
+
+Json
+{
+  "id": "exec_brief",
+  "max_tokens": 700,
+  "allowed_tools": ["web.search", "web.open"],
+  "allowed_domains": [
+    "reuters.com",
+    "ft.com",
+    "nature.com"
+  ],
+  "fabrication": false,
+  "require_citations": true
+}
+
+## Where skills.md files fits in AI agent workflow 
 
 skills.md
    ↓
@@ -89,6 +115,37 @@ tools + model calls
    ↓
 evaluators (did it obey skills?)
 
+## How skills.json Is Used at Runtime, in a AI workflow or AI pipeline 
+
+Execution flow
+
+User input
+   ↓
+Intent detection
+   ↓
+Skill match (skills.json)
+   ↓
+Input validation
+   ↓
+Tool + constraint enforcement
+   ↓
+LLM execution
+   ↓
+Output validation
+   ↓
+Final response
+
+If any step fails → execution halts.
+
+## Failure modes
+If skills.md is wrong:
+Humans misunderstand the agent
+Design confusion
+Still runs
+If skills.json is wrong:
+Agent misfires
+Tool calls fail
+Skill is unusable
 
 
 ## A git folder structure example whrv skills files
